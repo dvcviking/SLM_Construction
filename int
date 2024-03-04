@@ -1,0 +1,43 @@
+Script
+
+#Import Libraries:
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
+
+
+# Load your dataset
+data = pd.read_csv('construction_data.csv')
+
+# Assuming 'completion_time' is the target variable
+X = data.drop('completion_time', axis=1)
+y = data['completion_time']
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+# Initialize the model (Random Forest Regressor)
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+
+# Train the model
+model.fit(X_train, y_train)
+
+
+# Predictions on the test set
+y_pred = model.predict(X_test)
+
+
+mse = mean_squared_error(y_test, y_pred)
+print(f'Mean Squared Error: {mse}')
+
+
+new_data = pd.DataFrame({
+    'budget': [500000],
+    'project_size': [1000],
+    'workers': [20]
+})
+
+new_prediction = model.predict(new_data)
+print(f'Predicted Completion Time: {new_prediction[0]} days')
